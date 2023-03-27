@@ -6,7 +6,7 @@ def open_window(mode):
     window = tk.Toplevel()
     window.geometry("400x250")
     if mode == 1:
-        window.title("1")
+        window.title("Rail Fence")
     elif mode == 2:
         window.title("2")
     elif mode == 3:
@@ -14,9 +14,9 @@ def open_window(mode):
     elif mode == 4:
         window.title("4")
     elif mode == 5:
-        window.title("5")
+        window.title("Cezar")
     elif mode == 6:
-        window.title("6")
+        window.title("Vigener")
 
     text_label = tk.Label(window, text="Text:")
     text_label.pack()
@@ -56,7 +56,7 @@ root.title("Main Menu")
 root.geometry("400x300")
 
 
-button1 = tk.Button(root, text="Open Window 1", command=lambda: open_window(1))
+button1 = tk.Button(root, text="Rail Fence", command=lambda: open_window(1))
 button1.pack(pady=10)
 
 button2 = tk.Button(root, text="Open Window 2", command=lambda: open_window(2))
@@ -68,10 +68,10 @@ button3.pack(pady=10)
 button4 = tk.Button(root, text="Open Window 4", command=lambda: open_window(4))
 button4.pack(pady=10)
 
-button5 = tk.Button(root, text="Open Window 5", command=lambda: open_window(5))
+button5 = tk.Button(root, text="Cezar", command=lambda: open_window(5))
 button5.pack(pady=10)
 
-button6 = tk.Button(root, text="Open Window 6", command=lambda: open_window(6))
+button6 = tk.Button(root, text="Vineger", command=lambda: open_window(6))
 button6.pack(pady=10)
 
 
