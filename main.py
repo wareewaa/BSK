@@ -8,11 +8,11 @@ def open_window(mode):
     if mode == 1:
         window.title("Rail Fence")
     elif mode == 2:
-        window.title("2")
+        window.title("Matrix A")
     elif mode == 3:
-        window.title("3")
+        window.title("Matrix B")
     elif mode == 4:
-        window.title("4")
+        window.title("Matrix C")
     elif mode == 5:
         window.title("Cezar")
     elif mode == 6:
@@ -59,13 +59,13 @@ root.geometry("400x300")
 button1 = tk.Button(root, text="Rail Fence", command=lambda: open_window(1))
 button1.pack(pady=10)
 
-button2 = tk.Button(root, text="Open Window 2", command=lambda: open_window(2))
+button2 = tk.Button(root, text="Matrix A", command=lambda: open_window(2))
 button2.pack(pady=10)
 
-button3 = tk.Button(root, text="Open Window 3", command=lambda: open_window(3))
+button3 = tk.Button(root, text="Matrix B", command=lambda: open_window(3))
 button3.pack(pady=10)
 
-button4 = tk.Button(root, text="Open Window 4", command=lambda: open_window(4))
+button4 = tk.Button(root, text="Matrix C", command=lambda: open_window(4))
 button4.pack(pady=10)
 
 button5 = tk.Button(root, text="Cezar", command=lambda: open_window(5))
