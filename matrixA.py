@@ -28,5 +28,3 @@ def matrix_a_decrypt(text, key):
     return decryptedText
 
 
-print(matrix_a_encrypt("CRYPTOGRAPHYOSA", "3142"))
-print(matrix_a_decrypt("YCPRGTROHAYPAOS", "3142"))

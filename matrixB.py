@@ -11,7 +11,7 @@ def matrix_b_encrypt(text, key):
             encryptedText += text[index]
             index += cols
         encryptedText += " "
-    return encryptedText
+    return encryptedText[:-1]
 
 
 def matrix_b_decrypt(text, key):

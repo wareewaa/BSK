@@ -16,7 +16,7 @@ def open_window(mode):
     elif mode == 5:
         window.title("Cezar")
     elif mode == 6:
-        window.title("Vigener")
+        window.title("Vigenere")
 
     text_label = tk.Label(window, text="Text:")
     text_label.pack()
@@ -71,7 +71,7 @@ button4.pack(pady=10)
 button5 = tk.Button(root, text="Cezar", command=lambda: open_window(5))
 button5.pack(pady=10)
 
-button6 = tk.Button(root, text="Vineger", command=lambda: open_window(6))
+button6 = tk.Button(root, text="Vigenere", command=lambda: open_window(6))
 button6.pack(pady=10)
 
 
