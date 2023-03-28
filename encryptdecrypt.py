@@ -3,7 +3,7 @@ from cezar import caesar_cipher_encrypt, caesar_cipher_decrypt
 from vigenere import vigenere_cipher_encrypt, vigenere_cipher_decrypt
 from matrixA import matrix_a_encrypt, matrix_a_decrypt
 from matrixB import matrix_b_encrypt, matrix_b_decrypt
-#from matrixC import matrix_c_encrypt, matrix_c_decrypt
+from matrixC import matrix_c_encrypt # matrix_c_decrypt
 
 def encrypt(text, key, mode):
     if mode == 1:
@@ -13,7 +13,7 @@ def encrypt(text, key, mode):
     elif mode == 3:
         encryptedText = matrix_b_encrypt(text, key)
     elif mode == 4:
-        encryptedText = matrix_a_encrypt(text, key)
+        encryptedText = matrix_c_encrypt(text, key)
     elif mode == 5:
         encryptedText = caesar_cipher_encrypt(text, key)
     elif mode == 6:
@@ -29,7 +29,7 @@ def decrypt(text, key, mode):
     elif mode == 3:
         decryptedText = matrix_b_decrypt(text, key)
     elif mode == 4:
-        decryptedText = matrix_a_decrypt(text, key)
+        decryptedText = " ... "
     elif mode == 5:
         decryptedText = caesar_cipher_decrypt(text, key)
     elif mode == 6:
