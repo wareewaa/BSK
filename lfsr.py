@@ -19,6 +19,6 @@ def lfsr(polynomial, key_length):
     while i < key_length or key_length == 0:
         shift(array)
         i += 1
-    print(result)
+    print("".join(str(bit) for bit in result))
     return result
 lfsr(8, 5)

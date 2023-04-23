@@ -18,8 +18,6 @@ def open_window(mode):
         window.title("Cezar")
     elif mode == 6:
         window.title("Vigenere")
-    #elif mode == 7:
-    #    window.title("Stream")
 
     text_label = tk.Label(window, text="Text:")
     text_label.pack()
@@ -71,7 +69,7 @@ def stream_open_window(mode):
             with open(file_path, 'r', encoding="utf-8") as file:
                 text = file.read()
                 if mode == 1:
-                    encrypted_text = stream_encrypt(text, polynomial)
+                    encrypted_text = stream_encrypt(text, int(polynomial))
                 elif mode == 2:
                     encrypted_text = stream_decrypt(text, polynomial)
                 save_file_button = tk.Button(window, text="Save file", width=25, command=lambda: save_file(encrypted_text))

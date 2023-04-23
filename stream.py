@@ -1,19 +1,18 @@
+from lfsr import lfsr
+
 def stream_encrypt(text, polynomial):
     binary_text = ''.join(format(ord(letter), '08b') for letter in text)
     key_length = len(binary_text)
     encrypted_binary_text = ""
     encrypted_text = ""
     encrypted_letters = []
-    '''
-    wywolanie lsfr podajac potrzebna dlugosc klucza i wielomian)
-    key = lfsr(key_length, polynomial)
+    key = lfsr(polynomial, key_length)
     print(key)
-    '''
 
     for count, digit in enumerate(binary_text):
-        encrypted_binary_text += str(int(digit) ^ 1) #zamien 1 na key[count]
-        #print(str(count) + "  |   " + digit)
-   # print(binary_text)
+        encrypted_binary_text += str(int(digit) ^ int(key[count]))
+
+    #print(binary_text)
     #print(encrypted_binary_text)
 
     for i in range(0, len(encrypted_binary_text), 8):
@@ -22,14 +21,15 @@ def stream_encrypt(text, polynomial):
     print(encrypted_text)
     return encrypted_text
 
-def stream_decrypt(text,key):
+
+def stream_decrypt(text, key):
     binary_text = ''.join(format(ord(letter), '08b') for letter in text)
     decrypted_binary_text = ""
     decrypted_text = ""
     decrypted_letters = []
+    print(key)
     for count, digit in enumerate(binary_text):
-        decrypted_binary_text += str(int(digit) ^ 1)  # zamien 1 na key[count]
-        # print(str(count) + "  |   " + digit)
+        decrypted_binary_text += str(int(digit) ^ int(key[count]))
     # print(binary_text)
     # print(encrypted_binary_text)
 
@@ -39,4 +39,5 @@ def stream_decrypt(text,key):
     print(decrypted_text)
     return decrypted_text
 
-stream_encrypt("DDDDD",5)
+
+#stream_encrypt("DDDDD",5)
