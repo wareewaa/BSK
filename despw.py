@@ -19,15 +19,12 @@ def get_sbox_index(b: str, i: int) -> int:
     row = int(b[0] + b[5], 2)
     col = int(b[1:5], 2)
     sbox_index = row * 16 + col
-
     return sbox_index
 
 """12"""
-def s_box_transform(s_box_num, six_bit_num):
+def s_box_transform(s_box_num, sbox_index):
     s_box = S_BOXES[s_box_num]
-    row = int(six_bit_num[0] + six_bit_num[5], 2)
-    col = int(six_bit_num[1:5], 2)
-    return f'{s_box[row][col]:04b}'
+    return f'{s_box[sbox_index]:04b}'
 
 def s_box_permutation(s_box_outputs):
     return ''.join(s_box_outputs)
