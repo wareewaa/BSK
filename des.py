@@ -1,4 +1,4 @@
-text = "Q³^xªB"
+text = "Q³^xªBQ³^xªBHeÌ±¥Ø"
 key = "0001001100110100010101110111100110011011101111001101111111110001"
 type = 'dsa'
 
@@ -104,8 +104,43 @@ S_BOXES = [
      2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11)]
 
 
+def des_encryption(text, key, decrypt):
+    bin_text = transform_binary(text)
+    binary_text = ''
+    bit_amount = len(bin_text)
+    missing_bits = 0
+
+    if bit_amount % 64 == 0:
+        for n in range(int(bit_amount / 64)):
+            binary_text += des_1block_encryption(bin_text[n*64:n*64+64], key, decrypt)
+    else:
+        missing_bits = 64 - (bit_amount % 64)
+        #print(missing_bits)
+        for bit in range(missing_bits):
+            #print(bit)
+            bin_text.append('0')
+            #print(bin_text)
+        for n in range(int(bit_amount / 64) + 1):
+            binary_text += des_1block_encryption(bin_text[n*64:n*64+64], key, decrypt)
+
+    print(missing_bits)
+    print(binary_text)
+    #if missing_bits > 0:
+    #    binary_text = binary_text[:-missing_bits]
+    print("XD")
+    print(binary_text)
+    print("XD")
+
+
+    #decBlock = int(binary_text, 2)
+    #decrypted_letters = []
+    binary_chunks = [binary_text[i:i + 8] for i in range(0, len(binary_text), 8)]
+    decoded_text = ''.join(chr(int(chunk, 2)) for chunk in binary_chunks)
+    print("Decoded text:", decoded_text)
+    return decoded_text
+
 def des_1block_encryption(text, key, decrypt):
-    block = transform_binary(text)  # step1
+    block = text  # step1
     block = permutation(block, ip_tuple)  # step2
     LR = split(block)  # step3
     R = LR[1]
@@ -148,26 +183,13 @@ def des_1block_encryption(text, key, decrypt):
     #print(R)
     #print(L)
     block = R + L
-    #print(block)
     block = permutation(block, reverse_ip_tuple)
-    print(block)
+    #print(block)
     binaryBlock = ''.join(str(x) for x in block)
-    print(binaryBlock)
+    #print(binaryBlock)
+    return binaryBlock
 
-    decBlock = int(binaryBlock, 2)
-    hexBlock = hex(decBlock)[2:]
-    decrypted_letters = []
 
-    binary_chunks = [binaryBlock[i:i + 8] for i in range(0, len(binaryBlock), 8)]
-    decoded_text = ''.join(chr(int(chunk, 2)) for chunk in binary_chunks)
-    print("Decoded text:", decoded_text)
-    return decoded_text
-'''    for i in range(0, len(binaryBlock), 8):
-        decrypted_letters.append(binaryBlock[i:i + 8])
-    decrypted_text = "".join([chr(int(letter, 2)) for letter in decrypted_letters])
-    print(decrypted_text)'''
-    #print(decBlock)
-    #print(hexBlock)
 
 def get_sbox_index(b: str) -> int:
     row = int(b[0] + b[5], 2)
@@ -255,4 +277,5 @@ def xor_blocks(block1, block2):
         result.append(int(block1[i]) ^ int(block2[i]))
     return result
 
-des_1block_encryption(text, key, True)
+#des_1block_encryption(text, key, True)
+des_encryption(text,key,True)

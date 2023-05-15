@@ -4,7 +4,7 @@ from vigenere import vigenere_cipher_encrypt, vigenere_cipher_decrypt
 from matrixA import matrix_a_encrypt, matrix_a_decrypt
 from matrixB import matrix_b_encrypt, matrix_b_decrypt
 from matrixC import matrix_c_encrypt # matrix_c_decrypt
-from des import des_1block_encryption
+from des import des_encryption
 
 
 def encrypt(text, key, mode):
@@ -21,7 +21,7 @@ def encrypt(text, key, mode):
     elif mode == 6:
         encryptedText = vigenere_cipher_encrypt(text, key)
     elif mode == 7:
-        encryptedText = des_1block_encryption(text, key, False)
+        encryptedText = des_encryption(text, key, False)
     return encryptedText
 
 
@@ -39,5 +39,5 @@ def decrypt(text, key, mode):
     elif mode == 6:
         decryptedText = vigenere_cipher_decrypt(text, key)
     elif mode == 7:
-        decryptedText = des_1block_encryption(text, key, True)
+        decryptedText = des_encryption(text, key, True)
     return decryptedText
