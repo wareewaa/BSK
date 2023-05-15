@@ -1,5 +1,8 @@
-text = "12345678"
+text = "Q³^xªB"
 key = "0001001100110100010101110111100110011011101111001101111111110001"
+type = 'dsa'
+
+
 ip_tuple = (58, 50, 42, 34, 26, 18, 10, 2,
             60, 52, 44, 36, 28, 20, 12, 4,
             62, 54, 46, 38, 30, 22, 14, 6,
@@ -8,6 +11,15 @@ ip_tuple = (58, 50, 42, 34, 26, 18, 10, 2,
             59, 51, 43, 35, 27, 19, 11, 3,
             61, 53, 45, 37, 29, 21, 13, 5,
             63, 55, 47, 39, 31, 23, 15, 7)
+
+reverse_ip_tuple = (40, 8, 48, 16, 56, 24, 64, 32,
+                    39, 7, 47, 15, 55, 23, 63, 31,
+                    38, 6, 46, 14, 54, 22, 62, 30,
+                    37, 5, 45, 13, 53, 21, 61, 29,
+                    36, 4, 44, 12, 52, 20, 60, 28,
+                    35, 3, 43, 11, 51, 19, 59, 27,
+                    34, 2, 42, 10, 50, 18, 58, 26,
+                    33, 1, 41, 9, 49, 17, 57, 25)
 
 pc_tuple = (57, 49, 41, 33, 25, 17, 9,
             1, 58, 50, 42, 34, 26, 18,
@@ -92,30 +104,87 @@ S_BOXES = [
      2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11)]
 
 
-def des_1block_encryption(text, key):
-    block = transform_binary(text)
-    block = permutation(block, ip_tuple)
-    LR = split(block)
-    L = LR[0]
+def des_1block_encryption(text, key, decrypt):
+    block = transform_binary(text)  # step1
+    block = permutation(block, ip_tuple)  # step2
+    LR = split(block)  # step3
     R = LR[1]
-    reduced_key = key_reduction(key)
-    CD = split(reduced_key)
+    L = LR[0]
+    reduced_key = key_reduction(key)  # step4
+    CD = split(reduced_key)  # step5
     C = []
     D = []
+    K = []
     C.append(CD[0])
     D.append(CD[1])
-    print(C)
-    print(D)
-    for n in range(1):
-        print(C[n])
-        print(D[n])
-        #key_shift(C[n], D[n], n)
+    for n in range(16):  # step6
+        key_shift_result = key_shift(C[n], D[n], n)
+        C.append(key_shift_result[0])
+        D.append(key_shift_result[1])
+        CnDn = key_shift_result[0] + key_shift_result[1]  # step7
+        K.append(permutation(CnDn, pc2_tuple))
+
+    for n in range(16):
+        newR = block_expand(R)  # step8
+        if decrypt == True:
+            newR = xor_blocks(newR, K[15-n])  # step9
+        else:
+            newR = xor_blocks(newR, K[n])  # step9
+        newR = ''.join(str(x) for x in newR)
+        split_block = split_to_6bits(newR)  # step10
+        new_block = []
+        for count, chunk in enumerate(split_block):
+            sbox_index = get_sbox_index(chunk)  # step11
+            sbox_value = s_box_transform(count, sbox_index)  # step12
+            new_block.append(sbox_value)
+        new_block = combine_blocks(new_block)  # step13
+        # print(new_block)
+        new_block = permutation(new_block, p_tuple)  # step14
+        newR = xor_blocks(new_block, L)
+        L = R
+        R = newR
+        # print(''.join(str(x) for x in L))
+        # print(''.join(str(x) for x in R))
+    #print(R)
+    #print(L)
+    block = R + L
+    #print(block)
+    block = permutation(block, reverse_ip_tuple)
+    print(block)
+    binaryBlock = ''.join(str(x) for x in block)
+    print(binaryBlock)
+
+    decBlock = int(binaryBlock, 2)
+    hexBlock = hex(decBlock)[2:]
+    decrypted_letters = []
+
+    binary_chunks = [binaryBlock[i:i + 8] for i in range(0, len(binaryBlock), 8)]
+    decoded_text = ''.join(chr(int(chunk, 2)) for chunk in binary_chunks)
+    print("Decoded text:", decoded_text)
+    return decoded_text
+'''    for i in range(0, len(binaryBlock), 8):
+        decrypted_letters.append(binaryBlock[i:i + 8])
+    decrypted_text = "".join([chr(int(letter, 2)) for letter in decrypted_letters])
+    print(decrypted_text)'''
+    #print(decBlock)
+    #print(hexBlock)
+
+def get_sbox_index(b: str) -> int:
+    row = int(b[0] + b[5], 2)
+    col = int(b[1:5], 2)
+    sbox_index = row * 16 + col
+    return sbox_index
 
 
 def transform_binary(text):
-    binary_text = ''.join(format(ord(letter), '08b') for letter in text)
-    binary_text_list = [bit for bit in binary_text]
-    return binary_text_list
+    if type == 'binary':
+        binary_text_list = [bit for bit in text]
+        result = binary_text_list
+    else:
+        binary_text = ''.join(format(ord(letter), '08b') for letter in text)
+        binary_text_list = [bit for bit in binary_text]
+        result = binary_text_list
+    return result
 
 
 def permutation(block, permutation):
@@ -134,33 +203,24 @@ def split(table):
     return LR
 
 
-#
-
 
 def key_reduction(key):
     new_key = permutation(key, pc_tuple)  # key in list
-    #new_key = ''.join(str(x) for x in new_key)  # key in string
+    # new_key = ''.join(str(x) for x in new_key)  # key in string
     return new_key
 
 
-#key_reduction(key)
-
-'''def key_split(key):
-    LR = split(key)
-    keyL = LR[0]
-    keyR = LR[1]
-    print(LR)
-'''
-
 def key_shift(Cn, Dn, iteration):  # step 6 and 7
-    #L = keyLR[0]
-    #R = keyLR[1]
     for n in range(shift_tuple[iteration]):
         Cn.append(Cn.pop(0))
         Dn.append(Dn.pop(0))
-    key = Cn + Dn
-    return key
-    #new_key = permutation(key, pc2_tuple)
+    key_shifted = (Cn, Dn)
+    # joinC = ''.join(Cn)
+    # joinD = ''.join(Dn)
+    # joinKey = (joinC, joinD)
+    # print(joinKey)
+    return key_shifted
+    # new_key = permutation(key, pc2_tuple)
 
 
 def block_expand(block):
@@ -168,53 +228,13 @@ def block_expand(block):
     return expanded_block
 
 
-#test_text = "011110010010111100101011100011110111100000110110"
-
-"""9"""
-
-
-def xor_bits(bit_array1, bit_array2):
-    assert len(bit_array1) == len(bit_array2)
-    result = []
-    for i in range(len(bit_array1)):
-        result.append(bit_array1[i] ^ bit_array2[i])
-    return result
-
-
-"""10"""
-
-
 def split_to_6bits(text):
     result = []
-    new_block = []
     for i in range(8):
         chunk = text[i * 6:i * 6 + 6]
         result.append(chunk)
-    for count, chunk in enumerate(result):
-        sbox_index = get_sbox_index(chunk)
-        print(sbox_index)
-        sbox_value = s_box_transform(count, sbox_index)
-        print(sbox_value)
-        new_block.append(sbox_value)
-    print(result)
-    print(new_block)
-    new_block = combine_blocks(new_block)
 
-    print(new_block)
     return result
-
-
-"""11"""
-
-
-def get_sbox_index(b: str) -> int:
-    row = int(b[0] + b[5], 2)
-    col = int(b[1:5], 2)
-    sbox_index = row * 16 + col
-    return sbox_index
-
-
-"""12"""
 
 
 def s_box_transform(s_box_num, sbox_index):
@@ -222,75 +242,17 @@ def s_box_transform(s_box_num, sbox_index):
     return f'{s_box[sbox_index]:04b}'
 
 
-'''def s_box_permutation(s_box_outputs):
-    return ''.join(s_box_outputs)'''
-
-'''def s_boxes_transformation(expanded_r_block):
-    s_box_outputs = [s_box_transform(i, expanded_r_block[i*6:(i+1)*6]) for i in range(8)]
-    return s_box_permutation(s_box_outputs)'''
-
-"""13"""
-
 
 def combine_blocks(blocks):
     combined = ''.join(blocks)
-    # print(combined)
     return combined
 
 
-#split_to_6bits(test_text)
-"""14"""
-
-
-def permutation_p(block):
-    result = permutation(block, p_tuple)
-
-
-"""15"""
-
 
 def xor_blocks(block1, block2):
-    result = [0] * len(block1)
+    result = []
     for i in range(len(block1)):
-        result[i] = block1[i] ^ block2[i]
+        result.append(int(block1[i]) ^ int(block2[i]))
     return result
 
-
-
-
-
-'''def calculate_rn(ln, rn_1, kn):
-    expanded_rn_1 = expand_block(rn_1)
-    xor_result = xor_blocks(expanded_rn_1, kn)
-    s_result = s_block_substitution(xor_result)
-    p_result = permutate_block(s_result)
-    rn = xor_blocks(ln, p_result)
-    return rn
-'''
-"""16"""
-'''L_n = R_n_1.copy()
-'''
-"""17"""
-
-
-def combine_blocks(R16, L16):
-    return R16 + L16
-
-
-"""18"""
-'''# tablica permutacji IP-1
-IP_1 = [40, 8, 48, 16, 56, 24, 64, 32,
-        39, 7, 47, 15, 55, 23, 63, 31,
-        38, 6, 46, 14, 54, 22, 62, 30,
-        37, 5, 45, 13, 53, 21, 61, 29,
-        36, 4, 44, 12, 52, 20, 60, 28,
-        35, 3, 43, 11, 51, 19, 59, 27,
-        34, 2, 42, 10, 50, 18, 58, 26,
-        33, 1, 41, 9, 49, 17, 57, 25]
-'''
-'''def permute_IP_1(block):
-    bits = list(block)
-    permuted_bits = [bits[i-1] for i in IP_1]
-    return ''.join(permuted_bits)
-'''
-des_1block_encryption(text, key)
+des_1block_encryption(text, key, True)

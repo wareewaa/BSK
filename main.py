@@ -18,6 +18,8 @@ def open_window(mode):
         window.title("Cezar")
     elif mode == 6:
         window.title("Vigenere")
+    elif mode == 7:
+        window.title("DES")
 
     text_label = tk.Label(window, text="Text:")
     text_label.pack()
@@ -91,7 +93,7 @@ def stream_open_window(mode):
 
 root = tk.Tk()
 root.title("Main Menu")
-root.geometry("400x400")
+root.geometry("400x500")
 
 
 button1 = tk.Button(root, text="Rail Fence", command=lambda: open_window(1))
@@ -117,5 +119,8 @@ button7.pack(pady=10)
 
 button8 = tk.Button(root, text="Stream Decrypt", command=lambda: stream_open_window(2))
 button8.pack(pady=10)
+
+button9 = tk.Button(root, text="DES", command=lambda: open_window(7))
+button9.pack(pady=10)
 
 root.mainloop()
