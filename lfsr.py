@@ -5,7 +5,7 @@ def lfsr(polynomial, key_length):
     result = []
     string = format(random.getrandbits(polynomial), '0' +str(polynomial) +'b')
     array = [digit for digit in string]
-    print (array)
+    #print (array)
     def shift(array):
         n = len(array)
         result.append(array[n-1])
@@ -21,4 +21,6 @@ def lfsr(polynomial, key_length):
         i += 1
     print("".join(str(bit) for bit in result))
     return result
+
+
 lfsr(8, 5)

@@ -7,7 +7,7 @@ def stream_encrypt(text, polynomial):
     encrypted_text = ""
     encrypted_letters = []
     key = lfsr(polynomial, key_length)
-    print(key)
+    #print(key)
 
     for count, digit in enumerate(binary_text):
         encrypted_binary_text += str(int(digit) ^ int(key[count]))
@@ -27,7 +27,7 @@ def stream_decrypt(text, key):
     decrypted_binary_text = ""
     decrypted_text = ""
     decrypted_letters = []
-    print(key)
+    #print(key)
     for count, digit in enumerate(binary_text):
         decrypted_binary_text += str(int(digit) ^ int(key[count]))
     # print(binary_text)
